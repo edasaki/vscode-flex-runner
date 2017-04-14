@@ -14,14 +14,43 @@ export function activate(context: vscode.ExtensionContext) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
-
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
+    let flexRunner = new FlexRunner();
+    flexRunner.init();
+    let disposable = vscode.commands.registerCommand('flex-runner.run.config.1', () => {
+        flexRunner.test();
     });
-
     context.subscriptions.push(disposable);
+    disposable = vscode.commands.registerCommand('flex-runner.run.config.last', () => {
+        flexRunner.test(); 
+    });
+    context.subscriptions.push(disposable);
+}
+
+class FlexRunner {
+
+    private _terminal: vscode.Terminal;
+
+    constructor() {
+        this._terminal = vscode.window.createTerminal("Flex Runner");
+    }
+
+    public init() {
+        this.send("echo off");
+        this.send("cls");
+    }
+
+    private send(command: string) {
+        this._terminal.sendText(command);
+    }
+
+    public test() {
+        this._terminal.sendText("echo test");
+    }
+
+    public dispose() {
+        this._terminal.dispose(); 
+    }
+
 }
 
 // this method is called when your extension is deactivated

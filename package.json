@@ -1,7 +1,7 @@
 {
     "name": "flex-runner-vscode",
     "displayName": "flex-runner",
-    "description": "Flexible run configurations / launch settings for your project needs!",
+    "description": "Flexible run configurations & launch settings for your project building needs!",
     "version": "0.0.1",
     "publisher": "edasaki",
     "engines": {
@@ -11,14 +11,33 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:flex-runner.run.config.1",
+        "onCommand:flex-runner.run.config.last"
     ],
     "main": "./out/src/extension",
     "contributes": {
-        "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
-        }]
+        "commands": [
+            {
+               "command": "flex-runner.run.config.1",
+               "title": "Flex: Run Configuration 1"
+            },
+            {
+                "command": "flex-runner.run.config.last",
+                "title": "Flex: Run Last Configuration"
+            }
+        ],
+        "keybindings": [{
+            "command": "flex-runner.run.config.last",
+            "key": "ctrl-alt-r",
+            "when": "editorFocus"
+        }],
+        "configuration": {
+            "title": "",
+            "type": "object",
+            "properties": {
+                
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
