@@ -11,31 +11,76 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:flex-runner.run.config.1",
-        "onCommand:flex-runner.run.config.last"
+        "*"
     ],
     "main": "./out/src/extension",
     "contributes": {
         "commands": [
             {
-               "command": "flex-runner.run.config.1",
-               "title": "Flex: Run Configuration 1"
+                "command": "flex-runner.chooser",
+                "title": "Flex: Choose Configuration"
             },
             {
                 "command": "flex-runner.run.config.last",
                 "title": "Flex: Run Last Configuration"
+            },
+            {
+               "command": "flex-runner.run.config.1",
+               "title": "Flex: Run Configuration 1"
+            },
+            {
+                "command": "flex-runner.run.config.2",
+                "title": "Flex: Run Configuration 2"
+            },
+            {
+                "command": "flex-runner.run.config.3",
+                "title": "Flex: Run Configuration 3"
+            },
+            {
+                "command": "flex-runner.run.config.4",
+                "title": "Flex: Run Configuration 4"
+            },
+            {
+                "command": "flex-runner.run.config.5",
+                "title": "Flex: Run Configuration 5"
+            },
+            {
+                "command": "flex-runner.run.config.6",
+                "title": "Flex: Run Configuration 6"
+            },
+            {
+                "command": "flex-runner.run.config.7",
+                "title": "Flex: Run Configuration 7"
+            },
+            {
+                "command": "flex-runner.run.config.8",
+                "title": "Flex: Run Configuration 8"
+            },
+            {
+                "command": "flex-runner.run.config.9",
+                "title": "Flex: Run Configuration 9"
             }
         ],
-        "keybindings": [{
-            "command": "flex-runner.run.config.last",
-            "key": "ctrl-alt-r",
-            "when": "editorFocus"
-        }],
+        "keybindings": [
+            {
+                "command": "flex-runner.run.config.last",
+                "key": "ctrl-alt-r",
+                "when": "editorFocus"
+            },
+            {
+                "command": "flex-runner.chooser",
+                "key": "shift-alt-r"
+            }
+        ],
         "configuration": {
-            "title": "",
+            "title": "Flex Runner Configuration",
             "type": "object",
             "properties": {
-                
+                "flex-runner.config.1.command": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "description": "Specifies the terminal command to run for configuration 1."
+                }
             }
         }
     },
