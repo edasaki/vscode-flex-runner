@@ -23,7 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
         const index = k;
         const commandName = "flex-runner.run.config." + index;
         let disposable = vscode.commands.registerCommand(commandName, () => {
-            let config = vscode.workspace.getConfiguration("flex-runner.config." + index);
+            let config = vscode.workspace.getConfiguration("flex-runner.config");
+            console.log("config: " + JSON.stringify(config));
+            let configs = config.get("command");
+            for(var x in configs) {
+                console.log(JSON.stringify(configs[x]))
+            }
             let command = config.get("command");
             if (command == null) {
                 vscode.window.showErrorMessage("You don't have any command set for configuration " + index + "!");
