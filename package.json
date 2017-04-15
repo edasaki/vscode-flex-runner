@@ -25,8 +25,8 @@
                 "title": "Flex: Run Last Configuration"
             },
             {
-               "command": "flex-runner.run.config.1",
-               "title": "Flex: Run Configuration 1"
+                "command": "flex-runner.run.config.1",
+                "title": "Flex: Run Configuration 1"
             },
             {
                 "command": "flex-runner.run.config.2",
@@ -73,13 +73,35 @@
             }
         ],
         "configuration": {
-            "title": "Flex Runner Configuration",
             "type": "object",
+            "title": "Flex Runner Configuration",
             "properties": {
-                "flex-runner.config.1.command": {
-                    "type": ["string", "null"],
-                    "default": null,
-                    "description": "Specifies the terminal command to run for configuration 1."
+                "flex-runner.config.command": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "title": "Configured Commands",
+                        "properties": {
+                            "id": {
+                                "type": [
+                                    "integer",
+                                    "string"
+                                ],
+                                "description": "An identifier to reference this configuration."
+                            },
+                            "command": {
+                                "type": "string",
+                                "description": "The command to be run."
+                            }
+                        }
+                    },
+                    "default": [
+                        {
+                            "id": 1,
+                            "command": "echo Hi there!"
+                        }
+                    ],
+                    "description": "Specify run configurations."
                 }
             }
         }
