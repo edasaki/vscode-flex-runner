@@ -8,68 +8,18 @@ import * as vscode from 'vscode';
 
 let flexRunner = null;
 let last = null;
+let context = null;
 
-export function activate(context: vscode.ExtensionContext) {
-    interface KeyValPair {
-        key: string,
-        value: string
-    }
-    let actions: KeyValPair[] = [];
-    let strings: string[] = [];
-
-    flexRunner = new FlexRunner();
-    flexRunner.init();
-    for (var k = 1; k < 10; k++) {
-        const index = k;
-        const commandName = "flex-runner.run.config." + index;
-        let disposable = vscode.commands.registerCommand(commandName, () => {
-            let config = vscode.workspace.getConfiguration("flex-runner.config");
-            console.log("config: " + JSON.stringify(config));
-            let configs = config.get("command");
-            for(var x in configs) {
-                console.log(JSON.stringify(configs[x]))
-            }
-            let command = config.get("command");
-            if (command == null) {
-                vscode.window.showErrorMessage("You don't have any command set for configuration " + index + "!");
-            } else {
-                flexRunner.send(command);
-                flexRunner.space();
-            }
-        });
-        context.subscriptions.push(disposable);
-
-        let key = index + " - Run Configuration " + index;
-        strings.push(key);
-        actions[key] = { key: key, value: "flex-runner.run.config." + index };
-    }
-
-    let disposable = vscode.commands.registerCommand('flex-runner.run.config.last', () => {
-    });
-    context.subscriptions.push(disposable);
-    let key = "0 - Run Last Configuration";
-    strings.unshift(key);
-    actions[key] = { key: key, value: "flex-runner.run.config.last" };
-
-    const options: vscode.QuickPickOptions = {
-        placeHolder: 'Choose a configuration to run'
-    };
-
-    disposable = vscode.commands.registerCommand('flex-runner.chooser', () => {
-        vscode.window.showQuickPick(strings, options).then((resultString) => {
-            if (!resultString) {
-                return;
-            }
-            let command = actions[resultString].value;
-            vscode.commands.executeCommand(command);
-        });
-    });
-    context.subscriptions.push(disposable);
+export function activate(contextParam: vscode.ExtensionContext) {
+    context = contextParam 
+    flexRunner = new FlexRunner()
+    flexRunner.init()
 }
 
 class FlexRunner {
 
     private _terminal: vscode.Terminal;
+    public configs: FlexConfig[];
 
     constructor() {
         this._terminal = vscode.window.createTerminal("Flex Runner");
@@ -78,6 +28,61 @@ class FlexRunner {
     public init() {
         this.send("echo off");
         this.send("cls");
+        this.readConfigs();
+        this.registerCommands();
+    }
+
+    public tryCommand(configId) {
+        let fc = this.configs[configId]
+        if(fc) {
+           this.send(fc.command) 
+        } else {
+            vscode.window.showErrorMessage("Tried to execute unknown command: " + configId)
+        }
+    }
+
+    public readConfigs() {
+        this.configs = []
+        let config = vscode.workspace.getConfiguration("flex-runner.config")
+        let commandArr = config.get("command")
+        console.log("Reading configs: " + commandArr)
+        for (var x in commandArr) {
+            const e = commandArr[x]
+            console.log(x + " = " + JSON.stringify(e))
+            let fc : FlexConfig = {id : e.id, command : ""}
+            this.configs[fc.id] = fc
+        }
+        console.log("done")
+    }
+
+    public registerCommands() {
+        for (let k = 1; k < 10; k++) {
+            const index = k
+            const commandName = "flex-runner.run.config." + index
+            let disposable = vscode.commands.registerCommand(commandName, () => {
+                this.tryCommand(index)
+            })
+            context.subscriptions.push(disposable)
+        }
+        var disposable = vscode.commands.registerCommand('flex-runner.run.config.last', () => {
+        });
+        context.subscriptions.push(disposable)
+        let key = "0 - Run Last Configuration";
+        let strings : string[] = []
+        strings.unshift(key)
+        const options: vscode.QuickPickOptions = {
+            placeHolder: 'Choose a configuration to run'
+        };
+        disposable = vscode.commands.registerCommand('flex-runner.chooser', () => {
+            vscode.window.showQuickPick(strings, options).then((resultString) => {
+                if (!resultString) {
+                    return;
+                }
+                let command = actions[resultString].value;
+                vscode.commands.executeCommand(command);
+            });
+        });
+        context.subscriptions.push(disposable);
     }
 
     public space() {
