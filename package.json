@@ -92,6 +92,10 @@
                             "command": {
                                 "type": "string",
                                 "description": "The command to be run."
+                            },
+                            "script": {
+                                "type": ["null", "string"],
+                                "description": "Call a predefined function within scripts."
                             }
                         }
                     },
