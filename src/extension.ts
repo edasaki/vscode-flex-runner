@@ -11,6 +11,10 @@ let flexRunner = null;
 let last = null;
 let context = null;
 
+export default function getFlexRunner() {
+    return flexRunner;
+}
+
 export function activate(contextParam: vscode.ExtensionContext) {
     context = contextParam
     flexRunner = new FlexRunner()
@@ -19,12 +23,12 @@ export function activate(contextParam: vscode.ExtensionContext) {
 
 class FlexRunner {
 
-    private _terminal: vscode.Terminal;
+    public terminal: vscode.Terminal;
     public configs: FlexConfig[];
     private _lastSuccessfulConfig: FlexConfig = null;
 
     constructor() {
-        this._terminal = vscode.window.createTerminal("Flex Runner");
+        this.terminal = vscode.window.createTerminal("Flex Runner");
     }
 
     public init() {
@@ -55,7 +59,7 @@ class FlexRunner {
     }
 
     private script(s: string) {
-        Scripts.instance["test"]();
+        Scripts.instance[s]();
     }
 
     public readConfigs() {
@@ -125,18 +129,18 @@ class FlexRunner {
 
     public space() {
         for (var k = 0; k < 2; k++) {
-            this._terminal.sendText("");
+            this.terminal.sendText("");
         }
     }
 
     public send(command: string) {
         console.log(`Sending ${command}`)
-        this._terminal.sendText(command);
-        this._terminal.show(true);
+        this.terminal.sendText(command);
+        this.terminal.show(true);
     }
 
     public dispose() {
-        this._terminal.dispose();
+        this.terminal.dispose();
     }
 
 }
